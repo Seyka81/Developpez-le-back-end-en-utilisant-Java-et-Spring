@@ -1,4 +1,4 @@
-package com.chatop.backend.model;
+package com.chatop.model;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.chatop.backend.configuration;
+package com.chatop.configuration;
 
 
 

@@ -1,5 +1,6 @@
-package com.chatop.backend.domain;
+package com.chatop.domain;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
@@ -8,11 +9,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Data
 @AllArgsConstructor
-public class User {
+@NoArgsConstructor
+public class Users implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +32,6 @@ public class User {
 
     private LocalDate updatedAt;
 
-    public User() {
-    }
+
 
 }
