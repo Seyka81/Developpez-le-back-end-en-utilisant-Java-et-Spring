@@ -22,7 +22,7 @@ public class SwaggerConfiguration {
         return new OpenAPI().addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
                 .info(new Info().title("Chatop API")
-                        .description("Documentation de l'API Rest de l'application photo studio CRM.")
+                        .description("Documentation de l'API Rest de Chatop.")
                         .version("1.0").contact(new Contact().name("Seyka")));
     }
 
