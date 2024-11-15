@@ -1,9 +1,14 @@
 package com.chatop.services;
 
 
-import com.chatop.domain.Users;
+import com.chatop.domain.User;
+import com.chatop.model.DtoMapper;
+import com.chatop.model.UserDTO;
 import com.chatop.model.UserRegistrationDTO;
 import com.chatop.repositories.UserRepository;
+import com.chatop.security.JWTService;
+
+import io.jsonwebtoken.Claims;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,11 +31,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JWTService jwtService;
+
     @Override
     public ResponseEntity<?> save(UserRegistrationDTO registrationDTO) {
-        Users user = new Users();
-        ArrayList<Users> users = this.findAllUsers();
-        for (Users u : users) {
+        User user = new User();
+        ArrayList<User> users = this.findAllUsers();
+        for (User u : users) {
             if (u.getEmail().equals(registrationDTO.getEmail())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use");
             }
@@ -46,20 +54,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<Users> findUserById(long id) {
+    public Optional<User> findUserById(long id) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findUserById'");
     }
 
     @Override
-    public Users findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     @Override
-    public ArrayList<Users> findAllUsers() {
+    public ArrayList<User> findAllUsers() {
         return userRepository.findAll();
     }
 
+    @Override
+    public Optional<User> findUserByUsername(String username) {
+        return Optional.ofNullable(userRepository.findByEmail(username));
+    }
+
+    public UserDTO findUserByToken(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        Claims claims = jwtService.parseToken(token);
+        String username = claims.getSubject();
+        Optional<User> userOptional = findUserByUsername(username);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return DtoMapper.INSTANCE.userToUserDto(user);
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
 
 }

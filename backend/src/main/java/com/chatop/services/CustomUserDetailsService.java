@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.chatop.domain.Users user = userRepository.findByEmail(username);
+        com.chatop.domain.User user = userRepository.findByEmail(username);
 
         return new User(user.getEmail(), user.getPassword(), Collections.emptyList());
     }
