@@ -1,7 +1,5 @@
 package com.chatop.configuration;
 
-
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -23,8 +21,8 @@ public class SwaggerConfiguration {
     public OpenAPI openAPI() {
         return new OpenAPI().addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
-                .info(new Info().title("REST API")
-                        .description("Documentation de l'API Rest.")
+                .info(new Info().title("Chatop API")
+                        .description("Documentation de l'API Rest de l'application photo studio CRM.")
                         .version("1.0").contact(new Contact().name("Seyka")));
     }
 

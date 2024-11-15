@@ -1,6 +1,6 @@
 package com.chatop.security;
 
-import com.chatop.services.UserDetailsServiceImpl;
+import com.chatop.services.CustomUserDetailsService;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,30 +18,20 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
-public class SecurityConfiguration {
+public class SpringSecurityConfig implements WebMvcConfigurer {
 
     @Value("${jwt.secret}")
     private String jwtKey;
 
     @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    private UserDetailsServiceImpl UserDetailsServiceImpl;
-    private static final String[] WHITE_LIST = {
-        "/api-docs",
-        "/v3/api-docs/**",
-        "/swagger-ui.html",
-        "/swagger-ui/**",
-        "/swagger-ui/index.html",
-        "/swagger-ui/index.html/**",
-        "/swagger-ui/index.html#/**",
-    };
     /**
      * Configuration d'une chaîne de filtres autorisant ou non certaines requêtes avec ou sans authentification
      * @param http
@@ -50,21 +40,16 @@ public class SecurityConfiguration {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/pictures/**").permitAll()
-                        .requestMatchers(WHITE_LIST).permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-                .httpBasic(Customizer.withDefaults());
-
-                
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+                .httpBasic(Customizer.withDefaults()).build();
     }
 
     @Bean
@@ -93,9 +78,17 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(UserDetailsServiceImpl).passwordEncoder(bCryptPasswordEncoder);
+        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
         return authenticationManagerBuilder.build();
     }
 
+    /**
+     * Méthode permettant de définir un emplacement dans l'API pour la sauvegarde d'images
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/pictures/**")
+                .addResourceLocations("file:apiChatop/src/main/resources/static/pictures/");
+    }
 }
-
