@@ -33,7 +33,9 @@ public class SpringSecurityConfig implements WebMvcConfigurer {
     private CustomUserDetailsService customUserDetailsService;
 
     /**
-     * Configuration d'une chaîne de filtres autorisant ou non certaines requêtes avec ou sans authentification
+     * Configuration d'une chaîne de filtres autorisant ou non certaines requêtes
+     * avec ou sans authentification
+     * 
      * @param http
      * @return une chaîne de filtres
      * @throws Exception
@@ -69,26 +71,34 @@ public class SpringSecurityConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Méthode permettant de configurer un bean AuthenticationManager utilisé ailleurs dans l'application pour gérer les utilisateurs en lien avec un CustomUserDetailsService
-      * @param http
+     * Méthode permettant de configurer un bean AuthenticationManager utilisé
+     * ailleurs dans l'application pour gérer les utilisateurs en lien avec un
+     * CustomUserDetailsService
+     * 
+     * @param http
      * @param bCryptPasswordEncoder
      * @return un Autt
      * @throws Exception
      */
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
+    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder)
+            throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+                .getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(customUserDetailsService)
+                .passwordEncoder(bCryptPasswordEncoder);
         return authenticationManagerBuilder.build();
     }
 
     /**
-     * Méthode permettant de définir un emplacement dans l'API pour la sauvegarde d'images
+     * Méthode permettant de définir un emplacement dans l'API pour la sauvegarde
+     * d'images
+     * 
      * @param registry
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/pictures/**")
-                .addResourceLocations("file:apiChatop/src/main/resources/static/pictures/");
+                .addResourceLocations("file:src/main/resources/static/pictures/");
     }
 }
