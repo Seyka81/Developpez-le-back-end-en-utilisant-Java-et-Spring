@@ -11,12 +11,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements Serializable{
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +27,8 @@ public class User implements Serializable{
 
     private String password;
 
-    private LocalDate createdAt;
+    private LocalDate created_at;
 
-    private LocalDate updatedAt;
-
-
+    private LocalDate updated_at;
 
 }

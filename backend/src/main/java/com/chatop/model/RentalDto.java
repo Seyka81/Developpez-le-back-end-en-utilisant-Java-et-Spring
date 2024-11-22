@@ -6,15 +6,23 @@ import jakarta.persistence.Id;
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class RentalDto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected long id;
+    private long id;
 
     private String name;
 
-    private String email;
+    private float surface;
+
+    private double price;
+
+    private String picture;
+
+    private String description;
+
+    private Long owner_id;
 
     private String created_at;
 

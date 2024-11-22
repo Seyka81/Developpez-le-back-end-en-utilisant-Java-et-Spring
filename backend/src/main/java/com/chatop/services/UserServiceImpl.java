@@ -1,6 +1,5 @@
 package com.chatop.services;
 
-
 import com.chatop.domain.User;
 import com.chatop.model.DtoMapper;
 import com.chatop.model.UserDTO;
@@ -20,14 +19,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
-    
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -46,17 +44,16 @@ public class UserServiceImpl implements UserService {
         user.setEmail(registrationDTO.getEmail());
         user.setName(registrationDTO.getName());
         user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
-        user.setCreatedAt(LocalDate.now());
-        user.setUpdatedAt(LocalDate.now());
+        user.setCreated_at(LocalDate.now());
+        user.setUpdated_at(LocalDate.now());
         userRepository.save(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
-        
+
     }
 
     @Override
     public Optional<User> findUserById(long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findUserById'");
+        return userRepository.findById(id);
     }
 
     @Override
