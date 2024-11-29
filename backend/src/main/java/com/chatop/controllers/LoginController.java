@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chatop.model.DtoMapper;
 import com.chatop.model.UserDTO;
 import com.chatop.model.UserLoginDTO;
 import com.chatop.model.UserRegistrationDTO;
@@ -65,14 +64,19 @@ public class LoginController {
      * avoir vérifié que l'email saisi n'existe pas déjà
      * 
      * @param user
-     * @return un statut réponse 201
+     * @return un token autorisant les requêtes vers l'API et un statut réponse 200
      */
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody UserRegistrationDTO registrationDTO) {
         userService.save(registrationDTO);
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(registrationDTO);
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(registrationDTO.getEmail(), registrationDTO.getPassword()));
+            String token = jwtService.generateToken(authentication);
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating user");
         }
@@ -105,7 +109,13 @@ public class LoginController {
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
         return userService.findUserById(id)
                 .map(user -> {
-                    UserDTO userDto = DtoMapper.INSTANCE.userToUserDto(user);
+                    UserDTO userDto = new UserDTO();
+                    userDto.setId(user.getId());
+                    userDto.setName(user.getName());
+                    userDto.setEmail(user.getEmail());
+                    userDto.setCreated_at(user.getCreated_at().toString());
+                    userDto.setUpdated_at(user.getUpdated_at().toString());
+
                     return ResponseEntity.status(HttpStatus.OK).body(userDto);
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
