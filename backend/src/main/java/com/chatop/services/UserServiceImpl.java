@@ -1,7 +1,6 @@
 package com.chatop.services;
 
-import com.chatop.domain.User;
-import com.chatop.model.DtoMapper;
+import com.chatop.domain.Users;
 import com.chatop.model.UserDTO;
 import com.chatop.model.UserRegistrationDTO;
 import com.chatop.repositories.UserRepository;
@@ -34,9 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> save(UserRegistrationDTO registrationDTO) {
-        User user = new User();
-        ArrayList<User> users = this.findAllUsers();
-        for (User u : users) {
+        Users user = new Users();
+        ArrayList<Users> users = this.findAllUsers();
+        for (Users u : users) {
             if (u.getEmail().equals(registrationDTO.getEmail())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use");
             }
@@ -52,22 +51,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findUserById(long id) {
+    public Optional<Users> findUserById(long id) {
         return userRepository.findById(id);
     }
 
     @Override
-    public User findUserByEmail(String email) {
+    public Users findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     @Override
-    public ArrayList<User> findAllUsers() {
+    public ArrayList<Users> findAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public Optional<User> findUserByUsername(String username) {
+    public Optional<Users> findUserByUsername(String username) {
         return Optional.ofNullable(userRepository.findByEmail(username));
     }
 
@@ -78,11 +77,17 @@ public class UserServiceImpl implements UserService {
 
         Claims claims = jwtService.parseToken(token);
         String username = claims.getSubject();
-        Optional<User> userOptional = findUserByUsername(username);
+        Optional<Users> userOptional = findUserByUsername(username);
 
         if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            return DtoMapper.INSTANCE.userToUserDto(user);
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(userOptional.get().getId());
+            userDTO.setName(userOptional.get().getName());
+            userDTO.setEmail(userOptional.get().getEmail());
+            userDTO.setCreated_at(userOptional.get().getCreated_at().toString());
+            userDTO.setUpdated_at(userOptional.get().getUpdated_at().toString());
+
+            return userDTO;
         } else {
             throw new RuntimeException("User not found");
         }

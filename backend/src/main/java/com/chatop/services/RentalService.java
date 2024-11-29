@@ -1,16 +1,16 @@
 package com.chatop.services;
 
-import com.chatop.model.RentalDto;
+import com.chatop.model.RentalDTO;
 
 import java.util.List;
 
 public interface RentalService {
 
-    List<RentalDto> findAllRentals();
+    List<RentalDTO> findAllRentals();
 
-    RentalDto findRentalById(Long id);
+    RentalDTO findRentalById(Long id);
 
-    void saveOrUpdateRental(RentalDto rentalDto, Long ownerId);
+    void saveRental(RentalDTO rentalDto, Long ownerId);
 
-    void updateRental(RentalDto rental);
+    void updateRental(RentalDTO rental);
 }

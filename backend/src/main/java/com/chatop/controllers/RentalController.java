@@ -1,6 +1,6 @@
 package com.chatop.controllers;
 
-import com.chatop.model.RentalDto;
+import com.chatop.model.RentalDTO;
 import com.chatop.model.UserDTO;
 import com.chatop.services.RentalService;
 import com.chatop.services.UserService;
@@ -42,12 +42,12 @@ public class RentalController {
      * @return un statut réponse 200
      */
     @GetMapping("rentals")
-    public ResponseEntity<Map<String, List<RentalDto>>> getAllRentals() {
-        List<RentalDto> rentals = rentalService.findAllRentals();
+    public ResponseEntity<Map<String, List<RentalDTO>>> getAllRentals() {
+        List<RentalDTO> rentals = rentalService.findAllRentals();
 
         rentals.forEach(rental -> rental.setPicture(baseUrl + rental.getPicture()));
 
-        Map<String, List<RentalDto>> response = new HashMap<>();
+        Map<String, List<RentalDTO>> response = new HashMap<>();
         response.put("rentals", rentals);
 
         return ResponseEntity.ok(response);
@@ -60,8 +60,8 @@ public class RentalController {
      * @return un statut réponse 200 et le rental trouvé
      */
     @GetMapping("rentals/{id}")
-    public ResponseEntity<RentalDto> getRentalById(@PathVariable Long id) {
-        RentalDto rental = rentalService.findRentalById(id);
+    public ResponseEntity<RentalDTO> getRentalById(@PathVariable Long id) {
+        RentalDTO rental = rentalService.findRentalById(id);
 
         // Set the full URL for the picture
         rental.setPicture(baseUrl + rental.getPicture());
@@ -114,7 +114,7 @@ public class RentalController {
             UserDTO userDto = userService.findUserByToken(token);
             Long ownerId = userDto.getId();
 
-            RentalDto rentalDto = new RentalDto();
+            RentalDTO rentalDto = new RentalDTO();
             rentalDto.setName(name);
             rentalDto.setSurface(surface);
             rentalDto.setPrice(price);
@@ -122,7 +122,7 @@ public class RentalController {
             rentalDto.setPicture("/pictures/" + fileName);
             rentalDto.setCreated_at(LocalDate.now().toString());
 
-            rentalService.saveOrUpdateRental(rentalDto, ownerId);
+            rentalService.saveRental(rentalDto, ownerId);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Rental created successfully");
 
@@ -154,7 +154,7 @@ public class RentalController {
             @RequestParam("price") double price,
             @RequestParam("description") String description) {
         try {
-            RentalDto existingRental = rentalService.findRentalById(id);
+            RentalDTO existingRental = rentalService.findRentalById(id);
             if (existingRental == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental not found");
             }
@@ -162,11 +162,11 @@ public class RentalController {
             UserDTO userDto = userService.findUserByToken(token);
             Long ownerId = userDto.getId();
 
-            if (!existingRental.getOwner_id().equals(ownerId)) {
+            if (existingRental.getOwner_id() != ownerId) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to update this rental");
             }
 
-            RentalDto rental = rentalService.findRentalById(id);
+            RentalDTO rental = rentalService.findRentalById(id);
             rental.setName(name);
             rental.setSurface(surface);
             rental.setPrice(price);

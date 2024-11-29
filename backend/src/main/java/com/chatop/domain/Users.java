@@ -3,6 +3,7 @@ package com.chatop.domain;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,16 +16,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements Serializable {
+public class Users implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
 
-    private String name;
-
+    @Column(length = 255)
     private String email;
 
+    @Column(length = 255)
+    private String name;
+
+    @Column(length = 255)
     private String password;
 
     private LocalDate created_at;

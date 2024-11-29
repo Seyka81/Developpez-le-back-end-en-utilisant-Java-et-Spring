@@ -1,15 +1,10 @@
 package com.chatop.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Data;
 
 @Data
-public class RentalDto {
+public class RentalDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
@@ -22,7 +17,7 @@ public class RentalDto {
 
     private String description;
 
-    private Long owner_id;
+    private long owner_id;
 
     private String created_at;
 
