@@ -31,7 +31,6 @@ public class MessagesController {
             @RequestBody MessagesDTO messagesDTO) {
         try {
             messagesService.saveMessage(messagesDTO);
-
             return ResponseEntity.status(HttpStatus.CREATED).body("Message created successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating message");

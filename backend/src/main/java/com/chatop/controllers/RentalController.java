@@ -31,7 +31,7 @@ public class RentalController {
     private UserService userService;
 
     /**
-     * Correspond à http://localhost:3001 (voir application.properties)
+     * Correspond à une url (voir application.properties)
      */
     @Value("${server.base-url}")
     private String baseUrl;
@@ -88,7 +88,7 @@ public class RentalController {
             @RequestParam(value = "price", required = false) Double price,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "picture", required = false) MultipartFile picture) {
-        // Check for missing parameters
+
         if (token == null || token.isBlank() ||
                 name == null || name.isBlank() ||
                 surface == null ||

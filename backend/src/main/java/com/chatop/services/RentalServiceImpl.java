@@ -1,10 +1,8 @@
 package com.chatop.services;
 
 import com.chatop.domain.Rentals;
-import com.chatop.domain.Users;
 import com.chatop.model.RentalDTO;
 import com.chatop.repositories.RentalRepository;
-import com.chatop.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
