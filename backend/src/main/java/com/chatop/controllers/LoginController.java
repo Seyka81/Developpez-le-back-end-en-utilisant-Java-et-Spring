@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chatop.domain.Users;
 import com.chatop.model.UserDTO;
 import com.chatop.model.UserLoginDTO;
 import com.chatop.model.UserRegistrationDTO;
 import com.chatop.security.JWTService;
 import com.chatop.services.UserService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,8 +71,15 @@ public class LoginController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody UserRegistrationDTO registrationDTO) {
-        userService.save(registrationDTO);
+
         try {
+            ArrayList<Users> users = userService.findAllUsers();
+            for (Users user : users) {
+                if (user.getEmail().equals(registrationDTO.getEmail())) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
+                }
+            }
+            userService.save(registrationDTO);
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(registrationDTO.getEmail(), registrationDTO.getPassword()));
             String token = jwtService.generateToken(authentication);

@@ -1,32 +1,88 @@
-# Getting Started
+# Backend - Chatop API
 
-### Reference Documentation
+Ce projet est une API pour la gestion de locations immobilières, développée avec **Spring Boot**. Elle prend en charge la gestion des utilisateurs, des annonces, et des interactions.
 
-For further reference, please consider the following sections:
+## **Prérequis**
 
-- [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-- [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.3.5/maven-plugin)
-- [Create an OCI image](https://docs.spring.io/spring-boot/3.3.5/maven-plugin/build-image.html)
-- [Spring Data JPA](https://docs.spring.io/spring-boot/3.3.5/reference/data/sql.html#data.sql.jpa-and-spring-data)
-- [Spring Web](https://docs.spring.io/spring-boot/3.3.5/reference/web/servlet.html)
+- **Java 17**
+- **Maven** pas forcément obligatoire car il est souvent intégré par les IDE mais peut être utile
+- **Docker Desktop** installé et configuré.
 
-### Guides
+## **Installation et Exécution**
 
-The following guides illustrate how to use some features concretely:
+### **Étape 1 : Cloner le projet**
 
-- [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
-- [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-- [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-- [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-- [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
+```bash
+git clone https://github.com/Seyka81/Developpez-le-back-end-en-utilisant-Java-et-Spring.git
+cd backend
+```
 
-### Maven Parent overrides
+### **Étape 2 : Générer une clé secrète**
 
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+Avant de démarrer le projet, vous devez générer une clé secrète (pour la partie JWT).
 
+Afin de créer la clé voici les étapes :
+
+1. Ouvrez un terminal PowerShell.
+2. Exécutez la commande suivante:
+
+```powershell
     $bytes = New-Object byte[] 64
     [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
     [BitConverter]::ToString($bytes).Replace("-", "")
+```
+
+3. Copiez la clé générée.
+4. Ajoutez-la dans le fichier `src/main/resources/application.properties` en remplacant jwtsecret:
+
+```properties
+jwt.secret=jwtsecret
+```
+
+### **Étape 3 : Configuration de la base de données avec Docker**
+
+1. Exécutez la commande suivante pour démarrer un conteneur MySQL avec Docker (springbootdb et springuser et secretpassword et rootpassword sont bien évidemment des valeurs par défault):
+
+```bash
+docker run -d --name springboot-mysql -e MYSQL_DATABASE=springbootdb -e MYSQL_USER=springuser -e MYSQL_PASSWORD=secretpassword -e MYSQL_ROOT_PASSWORD=rootpassword -p 3306:3306 mysql:latest
+```
+
+1. Ouvrez le fichier `src/main/resources/application.properties`.
+2. Assurez-vous que les configurations MySQL correspondent aux paramètres du conteneur :
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/springbootdb
+spring.datasource.username=springuser
+spring.datasource.password=secretpassword
+```
+
+### **Étape 5 : Démarrer le backend**
+
+Vous pouvez utiliser plusieurs IDE pour développer et exécuter le projet. **IntelliJ IDEA** simple et efficace, mais ce tutoriel se concentre sur **Visual Studio Code**.
+
+#### **1. Installer les extensions nécessaires**
+
+Pour configurer un environnement de développement efficace dans VS Code, installez les extensions suivantes :
+
+- **Maven for Java** : Maven.
+- **Database Client** et **Database Client JDBC** : Accès et gestion des bases de données.
+- **Extension Pack for Java** : Fournit des outils essentiels pour le développement Java.
+
+#### **2. Étapes pour démarrer le projet**
+
+1. **Effectuer un `clean` et un `install` avec Maven** :
+
+   - Accédez à l'onglet **Maven** dans VS Code.
+   - Exécutez la commande `clean`, puis `install` pour télécharger les dépendances et compiler le projet.
+
+2. **Lancer le projet** :
+   - Accédez à l'onglet **Java Projects** (si le projet n'apparaît pas, vous pouvez ajouter le projet) puis exécutez le projet en mode **debug** (mieux pour les développeurs).
+   - Sinon, restez dans l'onglet Maven :
+     - Naviguez dans la section **plugins > spring-boot**.
+     - Lancer run.
+
+### **Étape 6 : Accéder à la documentation swagger de l'API (optionnel)**
+
+Une fois le projet lancé, vous pouvez accéder au Swagger à l'adresse suivante :
+
+http://localhost:3001/swagger-ui/index.html

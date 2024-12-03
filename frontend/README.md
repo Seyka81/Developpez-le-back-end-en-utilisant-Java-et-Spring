@@ -1,55 +1,66 @@
-# Estate
+# Projet Frontend ChâTop
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.0.
+Ce projet a été généré avec https://github.com/angular/angular-cli version 14.1.0.
 
-## Start the project
+## Démarrer le projet
 
-Git clone:
+### Cloner le dépôt
 
-> git clone https://github.com/OpenClassrooms-Student-Center/P3-Full-Stack-portail-locataire
+```bash
+git clone https://github.com/Seyka81/Developpez-le-back-end-en-utilisant-Java-et-Spring.git
+```
 
-Go inside folder:
+### Accéder au dossier frontend
 
-> cd P3-Full-Stack-portail-locataire
+```bash
+cd frontend
+```
 
-Install dependencies:
+### Installer les dépendances
 
-> npm install
+```bash
+npm install
+```
 
-Launch Front-end:
+### Lancer le Frontend
 
-> npm run start;
+```bash
+npm run start
+```
 
+---
 
-## Ressources
+## Ressources fournies (utilisées pour la création initiale du projet, mais désormais inutiles)
 
-### Mockoon env
+### Environnement Mockoon
 
-Download Mockoon here: https://mockoon.com/download/
+1. Téléchargez Mockoon ici : https://mockoon.com/download/.
+2. Une fois installé, chargez l'environnement disponible :
 
-After installing you could load the environement
+   ```bash
+   ressources/mockoon/rental-oc.json
+   ```
 
-> ressources/mockoon/rental-oc.json
+   Pour cela : **File > Open Environment** dans Mockoon.
 
-directly inside Mockoon 
+3. Lancez le serveur Mockoon en cliquant sur le bouton _play_.
 
-> File > Open environmement
+   **Documentation Mockoon** : https://mockoon.com/docs/latest/about/.
 
-For launching the Mockoon server click on play bouton
+### Collection Postman
 
-Mockoon documentation: https://mockoon.com/docs/latest/about/
+1. Importez la collection Postman :
 
-### Postman collection
+   ```bash
+   ressources/postman/rental.postman_collection.json
+   ```
 
-For Postman import the collection
-
-> ressources/postman/rental.postman_collection.json 
-
-by following the documentation: 
-
-https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman
-
+   Consultez la documentation Postman pour plus de détails si nécessaire.
 
 ### MySQL
 
-SQL script for creating the schema is available `ressources/sql/script.sql`
+Un script SQL pour la création du schéma est disponible :
+
+```bash
+ressources/sql/script.sql
+```
